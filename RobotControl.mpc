@@ -1,0 +1,41 @@
+project(*idl): dcps {
+  requires += no_opendds_safety_profile
+  TypeSupport_Files {
+    rpc_types.idl
+    RobotControl.idl
+  }
+
+  custom_only = 1
+}
+
+project(*Service) : dcpsexe, dcps_tcp, dcps_rtps_udp {
+  requires += no_opendds_safety_profile
+  exename   = Service
+  after    += *idl
+
+  TypeSupport_Files {
+    rpc_types.idl
+    RobotControl.idl
+  }
+
+  Source_Files {
+    Service.cpp
+    ReqDataReaderListenerImpl.cpp
+  }
+}
+
+project(*client) : dcpsexe, dcps_tcp, dcps_rtps_udp {
+  requires += no_opendds_safety_profile
+  exename   = client
+  after    += *Service
+
+  TypeSupport_Files {
+    rpc_types.idl
+    RobotControl.idl
+  }
+
+  Source_Files {
+    client.cpp
+    RplDataReaderListenerImpl.cpp
+  }
+}

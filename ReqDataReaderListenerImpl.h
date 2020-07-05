@@ -7,7 +7,18 @@
 #include <dds/DCPS/LocalObject.h>
 #include <dds/DCPS/Definitions.h>
 
-class DataReaderListenerImpl
+#include "RobotControlTypeSupportImpl.h"
+// Only For Test Local
+
+class My_Local_Robot {
+public:
+  static void setSpeed(float speed);
+  static float getSpeed();
+private:
+  static float m_speed;
+};
+
+class ReqDataReaderListenerImpl
   : public virtual OpenDDS::DCPS::LocalObject<DDS::DataReaderListener> {
 public:
   virtual void on_requested_deadline_missed(
@@ -36,6 +47,11 @@ public:
   virtual void on_sample_lost(
     DDS::DataReader_ptr reader,
     const DDS::SampleLostStatus& status);
+
+  void setMessageWriter(robot::RobotControl_ReplyDataWriter_var writer);
+
+private:
+  robot::RobotControl_ReplyDataWriter_var m_messgeWriter;
 };
 
 #endif /* DATAREADER_LISTENER_IMPL_H */

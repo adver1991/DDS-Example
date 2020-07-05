@@ -1,0 +1,115 @@
+#ifdef INTERFACE
+module robot {
+
+@DDSService
+interface RobotControl 
+{
+  float setSpeed(float speed);
+  float getSpeed();
+};
+
+}; //module robot
+#endif // INTERFACE
+
+#ifndef MY_BASIC
+#define MY_BASIC
+
+#include <rpc_types.idl>
+
+module robot {
+
+/***********************************************/
+/*                   Request Types             */
+/***********************************************/
+@nested
+struct RobotControl_setSpeed_In 
+{
+    float speed;
+};
+
+@nested
+struct RobotControl_getSpeed_In 
+{ 
+  DDS::RPC::UnusedMember dummy; 
+};
+
+const long RobotControl_setSpeed_Hash  = 1;
+const long RobotControl_getSpeed_Hash  = 2;
+
+@nested
+union RobotControl_Call switch(long) 
+{
+    default:
+       DDS::RPC::UnknownOperation unknownOp;
+
+    case RobotControl_setSpeed_Hash:
+       RobotControl_setSpeed_In setSpeed;
+
+    case RobotControl_getSpeed_Hash:
+       RobotControl_getSpeed_In getSpeed;
+};
+
+@topic
+struct RobotControl_Request 
+{
+  DDS::RPC::RequestHeader header;
+  RobotControl_Call       data;
+};
+
+/***********************************************/
+/*                   Reply Types               */
+/***********************************************/
+@nested
+struct RobotControl_setSpeed_Out 
+{
+  float return_;
+};
+
+@nested
+struct RobotControl_getSpeed_Out 
+{ 
+  float return_; 
+};
+
+@nested
+union RobotControl_setSpeed_Result switch(DDS::RPC::RemoteExceptionCode_t)
+{
+  default:
+    DDS::RPC::UnknownException unknownEx;
+
+  case DDS::RPC::REMOTE_EX_OK:
+    RobotControl_setSpeed_Out result;
+};
+
+@nested
+union RobotControl_getSpeed_Result switch(DDS::RPC::RemoteExceptionCode_t)
+{
+  default:
+    DDS::RPC::UnknownException unknownEx;
+  
+  case DDS::RPC::REMOTE_EX_OK:
+    RobotControl_getSpeed_Out result;
+};
+
+@nested
+union RobotControl_Return switch(long)
+{
+  default: 
+    DDS::RPC::UnknownOperation unknownOp;
+
+  case RobotControl_setSpeed_Hash:
+    RobotControl_setSpeed_Result setSpeed;
+
+  case RobotControl_getSpeed_Hash:
+    RobotControl_getSpeed_Result getSpeed;
+};
+
+@topic
+struct RobotControl_Reply
+{
+  DDS::RPC::ReplyHeader  header;
+  RobotControl_Return    data;
+};
+
+}; // module robot
+#endif /* MY_BASIC */

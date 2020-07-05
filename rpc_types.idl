@@ -1,0 +1,73 @@
+#ifndef RCP_TYPES
+#define RCP_TYPES
+module DDS { 
+
+// The following DDS related types are 
+// borrowed from the RTPS v1.2 specification
+typedef octet GuidPrefix_t[12];
+typedef octet EntityKey_t[3];
+
+@nested
+struct EntityId_t
+{
+  // octet EntityKey_t[3];
+  EntityKey_t entityKey;
+  octet entityKind;
+};
+
+@nested
+struct GUID_t
+{
+  GuidPrefix_t guidPrefix;
+  EntityId_t entityId;
+};
+
+@nested
+struct SequenceNumber_t
+{
+  long high;
+  unsigned long low;
+};
+
+@nested
+struct SampleIdentity
+{
+  GUID_t           writer_guid;
+  SequenceNumber_t sequence_number;
+};
+
+module RPC {
+
+typedef octet UnknownOperation;
+typedef octet UnknownException;
+typedef octet UnusedMember;
+
+enum RemoteExceptionCode_t
+{
+    REMOTE_EX_OK,
+    REMOTE_EX_UNSUPPORTED,
+    REMOTE_EX_INVALID_ARGUMENT,
+    REMOTE_EX_OUT_OF_RESOURCES,
+    REMOTE_EX_UNKNOWN_OPERATION,
+    REMOTE_EX_UNKNOWN_EXCEPTION
+};
+
+typedef string<255> InstanceName;
+
+@nested
+struct RequestHeader 
+{
+    DDS::SampleIdentity  requestId;
+    InstanceName    instanceTitle;
+};
+
+@nested
+struct ReplyHeader 
+{
+    DDS::SampleIdentity             relatedRequestId;
+    DDS::RPC::RemoteExceptionCode_t remoteEx;
+};
+
+}; // module DDS
+}; // module RPC
+#endif /* RCP_TYPES */
