@@ -1,6 +1,6 @@
 # DDS-Example
 Make Sure OpenDDS env
-https://opendds.org/quickstart/GettingStartedLinux.htm
+https://opendds.org/quickstart/GettingStartedLinux.html
 ## Ope
 1. mpc.pl Messenger.mpc -type gnuace
 2. make -f GNUmakefile.Messenger_Idl
